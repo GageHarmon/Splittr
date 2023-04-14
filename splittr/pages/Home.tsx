@@ -16,8 +16,3 @@ console.log(data)
     </div>
   );
 }
-
-
-
-
-

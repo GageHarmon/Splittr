@@ -27,19 +27,21 @@ class Bills(db.Model, SerializerMixin):
     __tablename__ = 'bills'
     
     id = db.Column(db.Integer, primary_key=True)
-    total_amount = db.Column(db.Float, nullable=False)
+    total_amount = db.Column(db.Float)
     created_at = db.Column(db.DateTime, server_default=db.func.now())
     created_by_user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
+    
+    user = db.relationship('Users', backref='bills')
     
 class Items(db.Model, SerializerMixin):
     __tablename__ = 'items'
     
     id = db.Column(db.Integer, primary_key=True)
-    title = db.Column(db.String(), nullable=False)
+    title = db.Column(db.String())
     description = db.Column(db.String())
-    price = db.Column(db.Float, nullable=False)
-    user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
-    status = db.Column(db.String(), nullable=False)
+    price = db.Column(db.Float)
+    user_id = db.Column(db.Integer, db.ForeignKey('users.id'))
+    status = db.Column(db.String())
     created_at = db.Column(db.DateTime, server_default=db.func.now())
     updated_at = db.Column(db.DateTime, default=db.func.now(), onupdate=db.func.now())
     
