@@ -12,7 +12,7 @@ export default function Home() {
           <Image style={{borderRadius: '4vh'}}
             src="/logo.png"
             alt="Splittr Logo"
-            width= {125}
+            width= {100}
             height= {100}
           />
         </div>
