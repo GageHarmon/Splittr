@@ -28,7 +28,7 @@ class Data(Resource):
 
 
 # Add the resource to the Flask-RESTful API
-api.add_resource(Data, '/data')
+api.add_resource(Data, '/splittr')
 
 if __name__ == '__main__':
     app.run()
