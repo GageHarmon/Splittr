@@ -1,12 +1,12 @@
 import React, { useState } from 'react';
 import { useRouter } from 'next/router';
 import axios from 'axios';
-import { setCookie } from 'nookies';
+
 const Login: React.FC = () => {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
-  const router = useRouter();
+
   const handleLogin = async () => {
     try {
       const response = await axios.post('http://localhost:5000/login', {
@@ -15,13 +15,7 @@ const Login: React.FC = () => {
       });
       const data = response.data;
       if (data.status === 'success') {
-        // Store the user in cookies
-        setCookie(null, 'user', JSON.stringify(data.user), {
-          maxAge: 30 * 24 * 60 * 60,
-          path: '/',
-        });
-        // Redirect to home page
-        router.push('/app');
+        // Handle successful login (e.g., store the user ID and redirect)
       } else {
         setError('Invalid credentials');
       }
