@@ -1,14 +1,14 @@
 import React, { useState, useEffect } from 'react';
 
-export default function Home() {
+export default function Home({ bills }) {
   const [data, setData] = useState([]);
 
   useEffect(() => {
-    fetch('http://localhost:3000/splittr')
-      .then(response => response.json())
-      .then(data => setData(data));
-  }, []);
-console.log(data)
+    setData(bills);
+  }, [bills]);
+
+  console.log(data);
+
   return (
     <div>
       <h1>Hello, world!</h1>

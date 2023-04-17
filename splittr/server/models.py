@@ -53,8 +53,6 @@ class Items(db.Model, SerializerMixin):
     updated_at = db.Column(
         db.DateTime, default=db.func.now(), onupdate=db.func.now())
 
-    # user = db.relationship('Users', backref='items')
-
     serialize_rules = ('-user.items',
                        '-bill_items.item')
 
