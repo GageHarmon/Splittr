@@ -1,18 +1,34 @@
 import React, { useState, useEffect } from 'react';
 
-export default function User({ users }) {
-  const [user, setUser] = useState([]);
+export default function User({ users, userId, bills }) {
+  const [user, setUser] = useState({});
+  const [userBills, setUserBills] = useState([]);
 
   useEffect(() => {
-    setUser(users);
-  }, [users]);
+    if (users) {
+      setUser(users.find(u => u.id === userId) || {});
+    }
+  }, [users, userId]);
 
-  console.log(user);
+
+  useEffect(() => {
+    if (user && bills) {
+      const userBills = bills.filter(bill => bill.user_id === userId);
+      setUserBills(userBills);
+    }
+  }, [bills, user, userId]);
+
+
 
   return (
     <div>
-      <h1>Hello, User!</h1>
-      <p>{JSON.stringify(user)}</p>
+      <h1>Hello, {user.username}!</h1>
+      <h2>{user.username}'s Bills:</h2>
+      <ul>
+        {userBills.map(bill => (
+          <li key={bill.id}>{bill.description}: {bill.amount}</li>
+        ))}
+      </ul>
     </div>
   );
 }
