@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 
-export default function Home({ bills }) {
+export default function Activity({ bills }) {
   const [data, setData] = useState([]);
 
   useEffect(() => {

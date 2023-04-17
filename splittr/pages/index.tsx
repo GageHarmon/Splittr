@@ -1,78 +1,71 @@
-import React, { useState } from 'react';
-import { useRouter } from 'next/router';
-import axios from 'axios';
-import { setCookie } from 'nookies';
+import { useState } from 'react';
 import { GetServerSideProps } from 'next';
-import { parseCookies } from 'nookies';
+import { useRouter } from 'next/router';
 
-const Login: React.FC = () => {
+interface HomeProps {
+  loggedIn: boolean;
+}
+
+export default function Home({ loggedIn }: HomeProps) {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
-  const [error, setError] = useState('');
   const router = useRouter();
 
-  const handleLogin = async () => {
-    try {
-      const response = await axios.post('http://localhost:5000/login', {
-        username,
-        password,
-      });
-      const data = response.data;
-
-      if (data.status === 'success') {
-        // Store the user in cookies
-        setCookie(null, 'user', JSON.stringify(data.user), {
-          maxAge: 30 * 24 * 60 * 60,
-          path: '/',
-        });
-
-        // Redirect to app page
-        router.push('/app');
-      } else {
-        setError('Invalid credentials');
-      }
-    } catch (error) {
-      setError('An error occurred');
-    }
-  };
-
-  return (
-    <div>
-      <h1>Login</h1>
-      <input
-        type="text"
-        placeholder="Username"
-        value={username}
-        onChange={(e) => setUsername(e.target.value)}
-      />
-      <input
-        type="password"
-        placeholder="Password"
-        value={password}
-        onChange={(e) => setPassword(e.target.value)}
-      />
-      <button onClick={handleLogin}>Login</button>
-      {error && <p>{error}</p>}
-    </div>
-  );
-};
-
-export const getServerSideProps: GetServerSideProps = async (ctx) => {
-  const cookies = parseCookies(ctx);
-  const user = cookies.user ? JSON.parse(cookies.user) : null;
-
-  if (user) {
-    return {
-      redirect: {
-        destination: '/app',
-        permanent: false,
-      },
+  async function handleSubmit(e) {
+    e.preventDefault();
+    const data = {
+      username: username,
+      password: password
     };
+    console.log(data)
+    const response = await fetch('/api/login', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(data),
+    });
+
+    if (response.ok) {
+      const user = await response.json();
+      router.push('/home');
+    } else {
+      alert('Invalid username or password');
+    }
   }
 
+  if (loggedIn) {
+    router.push('/home');
+    return <div>Redirecting...</div>;
+  } else {
+    
+    return (
+      <form onSubmit={handleSubmit}>
+        <input
+          type="text"
+          value={username}
+          onChange={(e) => setUsername(e.target.value)}
+          placeholder="Username"
+        />
+        <input
+          type="password"
+          value={password}
+          onChange={(e) => setPassword(e.target.value)}
+          placeholder="Password"
+        />
+        <button type="submit">Login</button>
+      </form>
+    );
+  }
+}
+
+export const getServerSideProps: GetServerSideProps = async (context) => {
+  const { req } = context;
+  const loggedIn = req.cookies.user_id ? true : false;
+
   return {
-    props: {},
+    props: {
+      loggedIn,
+    },
   };
 };
-
-export default Login;
