@@ -1,7 +1,8 @@
 from flask import Flask, make_response, request, jsonify
 from flask_migrate import Migrate
 from flask_restful import Api, Resource, fields, marshal_with
-
+from flask_cors import CORS
+from werkzeug.security import generate_password_hash, check_password_hash
 from models import db, Users, Bills, Items, BillItems, BillUsers
 
 app = Flask(__name__)
@@ -267,6 +268,16 @@ class BillUsersById(Resource):
 
 
 api.add_resource(BillUsersById, '/bill_users/<int:id>')
+
+@app.route('/login', methods=['POST'])
+def login():
+    data = request.get_json()
+    user = Users.query.filter_by(username=data['username']).first()
+
+    if user and check_password_hash(user.password, data['password']):
+        return jsonify({'status': 'success', 'user_id': user.id})
+    else:
+        return jsonify({'status': 'error', 'message': 'Invalid credentials'})
 
 if __name__ == '__main__':
     app.run()
