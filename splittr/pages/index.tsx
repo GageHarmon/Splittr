@@ -1,10 +1,11 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { GetServerSideProps } from 'next';
 import { useRouter } from 'next/router';
 
 interface HomeProps {
   loggedIn: boolean;
 }
+// pass into home for loggedIN { loggedIn }: HomeProps
 
 export default function Home({ loggedIn }: HomeProps) {
   const [username, setUsername] = useState('');
@@ -34,8 +35,13 @@ export default function Home({ loggedIn }: HomeProps) {
     }
   }
 
+  useEffect(() => {
+    if (loggedIn) {
+      router.push('/home');
+    }
+  }, [loggedIn]);
+
   if (loggedIn) {
-    router.push('/home');
     return <div>Redirecting...</div>;
   } else {
     

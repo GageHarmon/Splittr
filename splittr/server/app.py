@@ -290,5 +290,16 @@ class Login(Resource):
         
 api.add_resource(Login, '/login')
 
+@app.before_request
+def print_hello():
+    if session["user_id"]:
+        user = Users.query.filter(Users.id == session["user_id"]).first()
+        if user.user_type == 'Zebra':
+            session["valid"] = True
+        else:
+            session["valid"] = False
+    else:
+        session["valid"] = False
+
 if __name__ == '__main__':
     app.run()
