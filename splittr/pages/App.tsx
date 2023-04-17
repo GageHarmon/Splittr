@@ -1,53 +1,75 @@
-import Head from 'next/head';
-import Image from 'next/image';
-// import Home from './Home';
-import { GetServerSideProps } from 'next';
-import { parseCookies } from 'nookies';
+import Head from 'next/head'
+import Image from 'next/image'
+import Home from './Home'
+import Activity from './Activity'
+import Group from './Group'
+import User from './Account'
+import Link from 'next/link'
 
-export const getServerSideProps: GetServerSideProps = async (ctx) => {
-  const cookies = parseCookies(ctx);
-  const user = cookies.user ? JSON.parse(cookies.user) : null;
+export async function getServerSideProps() {
+  const billsRes = await fetch('http://127.0.0.1:5000/bills')
+  const billsText = await billsRes.text();
+  console.log('Bills Response:', billsText);
+  const bills = JSON.parse(billsText);
 
-  if (!user) {
-    return {
-      redirect: {
-        destination: '/',
-        permanent: false,
-      },
-    };
-  }
-
-  const res = await fetch('http://127.0.0.1:5000/bills');
-  const text = await res.text();
-  console.log('Response:', text);
-  const bills = JSON.parse(text);
+  const usersRes = await fetch('http://127.0.0.1:5000/users')
+  const usersText = await usersRes.text();
+  console.log('Users Response:', usersText);
+  const users = JSON.parse(usersText);
 
   return {
     props: {
       bills,
+      users
     },
-  };
-};
+  }
+}
 
-export default function App({ bills }) {
+export default function App({ bills, users }) {
   return (
     <>
       <Head>
         <title>Splittr App</title>
       </Head>
+      <nav>
+        <ul>
+          <li>
+            <Link href="/">
+              Home
+            </Link>
+          </li>
+          <li>
+            <Link href="/activity">
+              Activity
+            </Link>
+          </li>
+          <li>
+            <Link href="/group">
+              Group
+            </Link>
+          </li>
+          <li>
+            <Link href="/user">
+              Account
+            </Link>
+          </li>
+        </ul>
+      </nav>
       <main>
         <div>
-          <Image
-            style={{ borderRadius: '4vh' }}
+          <Image style={{ borderRadius: '4vh' }}
             src="/logo.png"
             alt="Splittr Logo"
             width={100}
             height={100}
           />
-          {/* <Home bills={bills} /> */}
+          <Home bills={bills[0]} />
+          <Activity bills={bills[0]} />
+          <Group users={users[2]} />
+          <User users={users[0]} />
         </div>
       </main>
     </>
-  );
+  )
 }
 

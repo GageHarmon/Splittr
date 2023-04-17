@@ -37,43 +37,22 @@ const Login: React.FC = () => {
   };
 
   return (
-    <div>
-      <h1>Login</h1>
-      <input
-        type="text"
-        placeholder="Username"
-        value={username}
-        onChange={(e) => setUsername(e.target.value)}
-      />
-      <input
-        type="password"
-        placeholder="Password"
-        value={password}
-        onChange={(e) => setPassword(e.target.value)}
-      />
-      <button onClick={handleLogin}>Login</button>
-      {error && <p>{error}</p>}
-    </div>
-  );
-};
+    <>
+      <Head>
+        <title>Splittr App</title>
+      </Head>
+      <main>
+        <div>
+          <Image style={{ borderRadius: '4vh' }}
+            src="/logo.png"
+            alt="Splittr Logo"
+            width={100}
+            height={100}
+          />
+          <Home bills={bills} />
 
-export const getServerSideProps: GetServerSideProps = async (ctx) => {
-  const cookies = parseCookies(ctx);
-  const user = cookies.user ? JSON.parse(cookies.user) : null;
-
-  if (user) {
-    return {
-      redirect: {
-        destination: '/app',
-        permanent: false,
-      },
-    };
-  }
-
-  return {
-    props: {},
-  };
-};
-
-export default Login;
-
+        </div>
+      </main>
+    </>
+  )
+}
