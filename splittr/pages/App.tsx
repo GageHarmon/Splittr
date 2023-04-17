@@ -1,6 +1,5 @@
 import Head from 'next/head'
 import Image from 'next/image'
-import Home from './Home'
 import Activity from './Activity'
 import Group from './Group'
 import User from './Account'
@@ -63,7 +62,6 @@ export default function App({ bills, users }) {
             width={100}
             height={100}
           />
-          <Home bills={bills[0]} />
           <Activity bills={bills[0]} />
           <Group users={users[2]} />
           <User users={users[0]} />
