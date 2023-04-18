@@ -2,7 +2,6 @@ from flask import Flask, make_response, request, jsonify, session
 from flask_migrate import Migrate
 from flask_restful import Api, Resource, fields, marshal_with
 from flask_cors import CORS
-from werkzeug.security import generate_password_hash, check_password_hash
 from models import db, Users, Bills, Items, BillItems, BillUsers
 
 app = Flask(__name__)
