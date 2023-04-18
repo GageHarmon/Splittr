@@ -5,7 +5,6 @@ import { useRouter } from 'next/router';
 interface HomeProps {
   loggedIn: boolean;
 }
-// pass into home for loggedIN { loggedIn }: HomeProps
 
 export default function Home({ loggedIn }: HomeProps) {
   const [username, setUsername] = useState('');
@@ -29,7 +28,7 @@ export default function Home({ loggedIn }: HomeProps) {
 
     if (response.ok) {
       const user = await response.json();
-      router.push('/home');
+      router.push('/Home');
     } else {
       alert('Invalid username or password');
     }
@@ -37,7 +36,7 @@ export default function Home({ loggedIn }: HomeProps) {
 
   useEffect(() => {
     if (loggedIn) {
-      router.push('/home');
+      router.push('/Home');
     }
   }, [loggedIn]);
 
