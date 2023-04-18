@@ -62,9 +62,9 @@ export default function App({ bills, users }) {
             width={100}
             height={100}
           />
-          <Activity bills={bills[0]} />
-          <Group users={users[2]} />
-          <User users={users[0]} />
+          <Activity bills={bills} />
+          <Group users={users} />
+          <User users={users} bills={bills} userId={users} />
         </div>
       </main>
     </>
