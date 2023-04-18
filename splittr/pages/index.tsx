@@ -37,11 +37,7 @@ export default function Home({ loggedIn }: HomeProps) {
 
   useEffect(() => {
     if (loggedIn) {
-<<<<<<< HEAD
-      router.push('/home');
-=======
       router.push('/Home');
->>>>>>> gage-copy
     }
   }, [loggedIn]);
 
