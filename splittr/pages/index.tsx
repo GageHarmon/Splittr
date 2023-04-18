@@ -29,7 +29,7 @@ export default function Home({ loggedIn }: HomeProps) {
 
     if (response.ok) {
       const user = await response.json();
-      router.push('/home');
+      router.push('/Home');
     } else {
       alert('Invalid username or password');
     }
@@ -37,7 +37,11 @@ export default function Home({ loggedIn }: HomeProps) {
 
   useEffect(() => {
     if (loggedIn) {
+<<<<<<< HEAD
       router.push('/home');
+=======
+      router.push('/Home');
+>>>>>>> gage-copy
     }
   }, [loggedIn]);
 
