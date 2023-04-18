@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 
-export default function Activity({ bills }) {
+export default function Home({ bills }) {
   const [data, setData] = useState([]);
 
   useEffect(() => {
@@ -11,7 +11,7 @@ export default function Activity({ bills }) {
 
   return (
     <div>
-      <h1>Hello, activity!</h1>
+      <h1>Welcome Home Nerds</h1>
       <p>{JSON.stringify(data)}</p>
     </div>
   );

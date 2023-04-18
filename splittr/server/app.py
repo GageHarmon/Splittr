@@ -1,4 +1,4 @@
-from flask import Flask, make_response, request, jsonify
+from flask import Flask, make_response, request, jsonify, session
 from flask_migrate import Migrate
 from flask_restful import Api, Resource, fields, marshal_with
 from flask_cors import CORS
@@ -11,10 +11,13 @@ app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 app.json.compact = False
 
 migrate = Migrate(app, db)
-
 db.init_app(app)
-
 api = Api(app)
+
+cors = CORS(app, resources={r'/*': {'origins': 'http://localhost:3000'}})
+app.config['CORS_HEADERS'] = 'Content-Type'
+
+app.secret_key = '@$$n8@11$'
 
 
 class AllUsers(Resource):
@@ -269,15 +272,34 @@ class BillUsersById(Resource):
 
 api.add_resource(BillUsersById, '/bill_users/<int:id>')
 
-@app.route('/login', methods=['POST'])
-def login():
-    data = request.get_json()
-    user = Users.query.filter_by(username=data['username']).first()
 
-    if user and check_password_hash(user.password, data['password']):
-        return jsonify({'status': 'success', 'user_id': user.id})
+class Login(Resource):
+    def post(self):
+        jsoned_request = request.get_json()
+        print(request.get_json())
+        user = Users.query.filter(Users.username == jsoned_request["username"]).first()
+        if user:
+            session['user_id'] = user.id
+            res = make_response(jsonify(user.to_dict()), 200)
+            return res
+        else:
+            res = make_response(jsonify({"login": "Invalid User"}), 500)
+            return res
+        
+    # add to line 286 --- and user.check_password(jsoned_request["password"]):
+        
+api.add_resource(Login, '/login')
+
+@app.before_request
+def print_hello():
+    if session["user_id"]:
+        user = Users.query.filter(Users.id == session["user_id"]).first()
+        if user.user_type == 'Zebra':
+            session["valid"] = True
+        else:
+            session["valid"] = False
     else:
-        return jsonify({'status': 'error', 'message': 'Invalid credentials'})
+        session["valid"] = False
 
 if __name__ == '__main__':
     app.run()

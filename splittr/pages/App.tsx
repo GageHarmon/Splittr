@@ -33,7 +33,7 @@ export default function App({ bills, users }) {
       <nav>
         <ul>
           <li>
-            <Link href="/">
+            <Link href="/home">
               Home
             </Link>
           </li>
