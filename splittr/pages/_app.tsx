@@ -6,14 +6,14 @@ export default function App({ Component, pageProps }) {
   const [loggedIn, setloggedIn] = useState(false);
   
   useEffect(()=>{
-    fetch('http://127.0.0.1:5000/check')
+    fetch('/check')
     .then(r => r.json())
     .then(data => setloggedIn(data.logged_in))
   },[]);
 
 
   useEffect(() => {
-    fetch("http://127.0.0.1:5000/logged_user")
+    fetch('/logged_user')
       .then((r) => {
         if (!r.ok) {
           throw new Error(`HTTP error ${r.status}`);
