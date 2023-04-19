@@ -1,29 +1,16 @@
-import '@/styles/globals.css'
-import {useEffect, useState} from 'react'
-
-import { ThemeProvider, createTheme } from '@mui/material/styles';
-
-const theme = createTheme({
-  palette: {
-    primary: {
-      main: '#FFBE79',
-    },
-    secondary: {
-      main: '#89C4E1',
-    },
-  },
-});
+import '@/styles/globals.css';
+import { useEffect, useState } from 'react';
 
 export default function App({ Component, pageProps }) {
-  const [currUser, setcurrUser] = useState(null);
-  const [loggedIn, setloggedIn] = useState(false);
-  
-  useEffect(()=>{
-    fetch('/check')
-    .then(r => r.json())
-    .then(data => setloggedIn(data.logged_in))
-  },[]);
+  const [currUser, setCurrUser] = useState(null);
+  const [loggedIn, setLoggedIn] = useState(false);
+  const [bills, setBills] = useState([]);
 
+  useEffect(() => {
+    fetch('/check')
+      .then((r) => r.json())
+      .then((data) => setLoggedIn(data.logged_in));
+  }, []);
 
   useEffect(() => {
     fetch('/logged_user')
@@ -35,18 +22,32 @@ export default function App({ Component, pageProps }) {
       })
       .then((data) => {
         if (!data.error) {
-          setcurrUser(data);
+          setCurrUser(data);
         }
       })
       .catch((error) => {
-        console.error("Error fetching logged_user:", error);
+        console.error('Error fetching logged_user:', error);
       });
   }, []);
-  
+
+  useEffect(() => {
+    fetch('/bills')
+      .then((r) => {
+        if (!r.ok) {
+          throw new Error(`HTTP error ${r.status}`);
+        }
+        return r.json();
+      })
+      .then((data) => {
+        setBills(data);
+      })
+      .catch((error) => {
+        console.error('Error fetching bills:', error);
+      });
+  }, []);
+
 
   return (
-    <ThemeProvider theme={theme}>
-      <Component {...pageProps} currUser={currUser} loggedIn={loggedIn}/>
-    </ThemeProvider>
+    <Component {...pageProps} currUser={currUser} loggedIn={loggedIn} bills={bills} />
   );
 }
