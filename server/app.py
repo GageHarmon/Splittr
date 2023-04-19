@@ -3,15 +3,19 @@ from flask_migrate import Migrate
 from flask_restful import Api, Resource
 from flask_cors import CORS
 from models import db, Users, Bills, Items, BillItems, BillUsers
-from flask_bcrypt import Bcrypt
 
+# from flask_bcrypt import Bcrypt
+from services import app,bcrypt,db
+# Imports for using .env
+import os
+from dotenv import load_dotenv
+# Load the env file
+load_dotenv()
+# Use os.environ.get() to get the data
 
-app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///splittr.db'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 app.json.compact = False
-
-bcrypt = Bcrypt(app)
 
 migrate = Migrate(app, db)
 db.init_app(app)
@@ -19,7 +23,7 @@ db.init_app(app)
 api = Api(app)
 CORS(app)
 
-app.secret_key = '@$$n8@11$'
+app.secret_key = os.environ.get("secretkey")
 
 
 class AllUsers(Resource):
@@ -278,30 +282,27 @@ api.add_resource(BillUsersById, '/bill_users/<int:id>')
 class Login(Resource):
     def post(self):
         jsoned_request = request.get_json()
-        print(request.get_json())
         user = Users.query.filter(Users.username == jsoned_request["username"]).first()
-        if user:  # Add a condition to check if the password is correct
+        if user:
             session['user_id'] = user.id
-            res = make_response(jsonify(user.to_dict()), 200)
+            print(session)
+            res = make_response(jsonify(user.to_dict()),200)
             return res
         else:
-            res = make_response(jsonify({"login": "Invalid User"}), 500)
-            return res
-
-        
-    # add to line 286 --- and user.check_password(jsoned_request["password"]):
-        
+            res = make_response(jsonify({ "login" : "Invalid User"}),500)
+            return res    
 api.add_resource(Login, '/login')
 
-class LoggedUser(Resource):
+class get_logged_user(Resource):
     def get(self):
-        if 'user_id' in session:
-            user = Users.query.get(session['user_id'])
-            if user:
-                return make_response(jsonify(user.to_dict()), 200)
-        return make_response(jsonify({"error": "No user logged in"}), 400)
-    
-api.add_resource(LoggedUser, '/logged_user')
+        print(session)
+        user_id = session.get('user_id')
+        if user_id:
+            user = Users.query.filter(Users.id == session["user_id"]).first()
+            res = make_response(jsonify(user.to_dict()),200)
+            return res
+        
+api.add_resource(get_logged_user, '/logged_user')
 
 class check_logged_in(Resource):
     def get(self):

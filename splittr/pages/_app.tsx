@@ -6,20 +6,30 @@ export default function App({ Component, pageProps }) {
   const [loggedIn, setloggedIn] = useState(false);
   
   useEffect(()=>{
-    fetch('/check')
+    fetch('http://127.0.0.1:5000/check')
     .then(r => r.json())
     .then(data => setloggedIn(data.logged_in))
   },[]);
 
+
   useEffect(() => {
-    fetch("/logged_user")
-      .then((r) => r.json())
+    fetch("http://127.0.0.1:5000/logged_user")
+      .then((r) => {
+        if (!r.ok) {
+          throw new Error(`HTTP error ${r.status}`);
+        }
+        return r.json();
+      })
       .then((data) => {
         if (!data.error) {
           setcurrUser(data);
         }
+      })
+      .catch((error) => {
+        console.error("Error fetching logged_user:", error);
       });
   }, []);
+  
 
   return <Component {...pageProps} currUser={currUser} loggedIn={loggedIn}/>
 }
