@@ -82,7 +82,7 @@ return (
             <form onSubmit={handleSubmit}>
                 <div className='mb-4'>
                     <label className='block text-dblue font-bold mb-2' htmlFor='email'>
-                        Email:
+                        Username:
                     </label>
                     <input
                     className='border rounded w-full py-1 px-3 text-gray-700 leading-tight'
