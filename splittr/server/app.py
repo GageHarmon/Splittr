@@ -1,20 +1,23 @@
 from flask import Flask, make_response, request, jsonify, session
 from flask_migrate import Migrate
-from flask_restful import Api, Resource, fields, marshal_with
+from flask_restful import Api, Resource
 from flask_cors import CORS
 from models import db, Users, Bills, Items, BillItems, BillUsers
+from flask_bcrypt import Bcrypt
+
 
 app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///splittr.db'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 app.json.compact = False
 
+bcrypt = Bcrypt(app)
+
 migrate = Migrate(app, db)
 db.init_app(app)
-api = Api(app)
 
-cors = CORS(app, resources={r'/*': {'origins': 'http://localhost:3000'}})
-app.config['CORS_HEADERS'] = 'Content-Type'
+api = Api(app)
+CORS(app)
 
 app.secret_key = '@$$n8@11$'
 
@@ -277,28 +280,50 @@ class Login(Resource):
         jsoned_request = request.get_json()
         print(request.get_json())
         user = Users.query.filter(Users.username == jsoned_request["username"]).first()
-        if user:
+        if user:  # Add a condition to check if the password is correct
             session['user_id'] = user.id
             res = make_response(jsonify(user.to_dict()), 200)
             return res
         else:
             res = make_response(jsonify({"login": "Invalid User"}), 500)
             return res
+
         
     # add to line 286 --- and user.check_password(jsoned_request["password"]):
         
 api.add_resource(Login, '/login')
 
-@app.before_request
-def print_hello():
-    if session["user_id"]:
-        user = Users.query.filter(Users.id == session["user_id"]).first()
-        if user.user_type == 'Zebra':
-            session["valid"] = True
-        else:
-            session["valid"] = False
-    else:
-        session["valid"] = False
+class LoggedUser(Resource):
+    def get(self):
+        if 'user_id' in session:
+            user = Users.query.get(session['user_id'])
+            if user:
+                return make_response(jsonify(user.to_dict()), 200)
+        return make_response(jsonify({"error": "No user logged in"}), 400)
+    
+api.add_resource(LoggedUser, '/logged_user')
+
+class check_logged_in(Resource):
+    def get(self):
+        user_id = session.get('user_id')
+        if user_id:
+            if user_id != None:
+                return make_response({"logged_in": True},200)
+        return make_response({"logged_in": False},200)
+    
+api.add_resource(check_logged_in, '/check')
+
+# @app.before_request
+# def print_hello():
+#     if session.get("user_id"):
+#         user = Users.query.filter(Users.id == session["user_id"]).first()
+#         if user:
+#             session["valid"] = True
+#         else:
+#             session["valid"] = False
+#     else:
+#         session["valid"] = False
+
 
 if __name__ == '__main__':
     app.run()
