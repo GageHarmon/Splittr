@@ -1,6 +1,19 @@
 import '@/styles/globals.css'
 import {useEffect, useState} from 'react'
 
+import { ThemeProvider, createTheme } from '@mui/material/styles';
+
+const theme = createTheme({
+  palette: {
+    primary: {
+      main: '#FFBE79',
+    },
+    secondary: {
+      main: '#89C4E1',
+    },
+  },
+});
+
 export default function App({ Component, pageProps }) {
   const [currUser, setcurrUser] = useState(null);
   const [loggedIn, setloggedIn] = useState(false);
@@ -31,5 +44,9 @@ export default function App({ Component, pageProps }) {
   }, []);
   
 
-  return <Component {...pageProps} currUser={currUser} loggedIn={loggedIn}/>
+  return (
+    <ThemeProvider theme={theme}>
+      <Component {...pageProps} currUser={currUser} loggedIn={loggedIn}/>
+    </ThemeProvider>
+  );
 }

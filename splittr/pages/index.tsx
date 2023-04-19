@@ -1,17 +1,16 @@
 import { useEffect, useState } from 'react';
-// import { GetServerSideProps } from 'next';
 import { useRouter } from 'next/router';
-// import { parseCookies } from 'nookies';
+import { useTheme } from '@mui/material/styles';
 
 interface HomeProps {
   loggedIn: boolean;
 }
-// pass into home for loggedIN { loggedIn }: HomeProps
 
 export default function Home({ loggedIn }: HomeProps) {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const router = useRouter();
+  const theme = useTheme();
 
   async function handleSubmit(e) {
     e.preventDefault();
@@ -47,32 +46,31 @@ export default function Home({ loggedIn }: HomeProps) {
   } else {
     
     return (
-      <form onSubmit={handleSubmit}>
-        <input
-          type="text"
-          value={username}
-          onChange={(e) => setUsername(e.target.value)}
-          placeholder="Username"
-        />
-        <input
-          type="password"
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-          placeholder="Password"
-        />
-        <button type="submit">Login</button>
-      </form>
+      <div className='min-h-screen bg-gradient-to-br from-rblue to-rorange flex items-center justify-center'>
+        <div className='bg-white p-10 rounded-lg shadow-md'>
+          <form onSubmit={handleSubmit}>
+            <div>
+              <div>
+                <input
+                  type="text"
+                  value={username}
+                  onChange={(e) => setUsername(e.target.value)}
+                  placeholder="Username"
+                />
+              </div>
+              <div>
+                <input
+                  type="password"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  placeholder="Password"
+                />
+              </div>
+              <button type="submit">Login</button>
+            </div>
+          </form>
+        </div>
+      </div>
     );
   }
 }
-
-// export const getServerSideProps: GetServerSideProps = async (context) => {
-//   const cookies = parseCookies(context);
-//   const loggedIn = cookies.session ? true : false;
-
-//   return {
-//     props: {
-//       loggedIn,
-//     },
-//   };
-// };
