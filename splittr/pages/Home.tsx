@@ -1,40 +1,17 @@
-import React from 'react';
-import { AppBar,Toolbar,Typography,Grid,TextField,Button,List,ListItem,ListItemText,Paper,Avatar,Box,BottomNavigation,BottomNavigationAction} from '@mui/material';
-// import { styled, createTheme, ThemeProvider } from '@mui/system';
+import React, { useState } from 'react';
+import { AppBar, Toolbar, Typography, Grid, TextField, Button, List, ListItem, ListItemText, Paper, Avatar, Box, BottomNavigation, BottomNavigationAction } from '@mui/material';
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 import ListAltIcon from '@mui/icons-material/ListAlt';
 import GroupIcon from '@mui/icons-material/Group';
 import { useRouter } from 'next/router';
 
-// const theme = createTheme({
-//     palette: {
-//       background: {
-//         paper: '#fff',
-//       },
-//     },
-//   });
+interface HomeProps {
+  currUser: any;
+}
 
-// const MainProfile = styled(Paper)(({ theme }) => ({
-//   padding: theme.spacing(2),
-//   marginBottom: theme.spacing(3),
-// }));
-
-// const LargeAvatar = styled(Avatar)(({ theme }) => ({
-//   width: theme.spacing(7),
-//   height: theme.spacing(7),
-// }));
-
-// const Footer = styled(Box)(({ theme }) => ({
-//   position: 'fixed',
-//   bottom: 0,
-//   width: '100%',
-//   backgroundColor: theme.palette.background.paper,
-// }));
-
-export default function Home() {
+export default function Home({ currUser }: HomeProps) {
   const router = useRouter();
-
-  const [value, setValue] = React.useState('activity');
+  const [value, setValue] = useState('activity');
 
   const handleChange = (event: React.ChangeEvent<{}>, newValue: string) => {
     setValue(newValue);
@@ -42,13 +19,12 @@ export default function Home() {
   };
 
   return (
-    // <ThemeProvider theme={theme}>
-      <div>
-        <AppBar position="static">
-          <Toolbar>
-            <Typography variant="h6">Splittr</Typography>
-          </Toolbar>
-        </AppBar>
+    <div>
+      <AppBar position="static">
+        <Toolbar>
+          <Typography variant="h6">Splittr</Typography>
+        </Toolbar>
+      </AppBar>
 
         {/* <MainProfile> */}
           <Grid container spacing={2} alignItems="center">
@@ -78,6 +54,5 @@ export default function Home() {
           </BottomNavigation>
         {/* </Footer> */}
       </div>
-    // </ThemeProvider>
   );
-}
+  }
