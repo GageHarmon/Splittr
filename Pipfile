@@ -15,6 +15,7 @@ flask-bcrypt = "*"
 importlib-resources = "*"
 jsonify = "*"
 requests = "*"
+python-dotenv = "*"
 
 [dev-packages]
 
