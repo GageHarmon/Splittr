@@ -12,10 +12,10 @@ export default function Home({ currUser }: HomeProps) {
   return (
     <div className="min-h-screen bg-gradient-to-br from-rblue to-rorange flex flex-col justify-start items-center pt-12">
 
-{/* ++++++ HEADER ++++++ */}
+      {/* ++++++ HEADER ++++++ */}
       <Header title="Splittr" />
 
-{/* ++++ USER SECTION ++++ */}
+      {/* ++++ USER SECTION ++++ */}
       <div className="bg-white p-6 mb-8 mt-20 rounded-lg shadow-2xl flex items-center space-x-4">
         <div>
           {/* Avatar would go here */}
@@ -32,7 +32,7 @@ export default function Home({ currUser }: HomeProps) {
         </div>
       </div>
 
-{/* ++++++ FOOTER WITH NAVIGATION ++++++ */}
+      {/* ++++++ FOOTER WITH NAVIGATION ++++++ */}
       <Footer activeLink={value} onChange={setValue} />
     </div>
   );
