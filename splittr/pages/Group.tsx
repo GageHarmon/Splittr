@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import Footer from '../components/Footer';
 
 export default function Group({ bills, users, currUser }) {
@@ -8,7 +8,7 @@ export default function Group({ bills, users, currUser }) {
   const [newBillUsers, setNewBillUsers] = useState([]);
 
   if (!currUser || bills.length === 0) {
-    return <div>Loading.. </div>;
+    return <div className="text-dblue">Loading.. </div>;
   }
 
   const filteredGroups = currUser.bill_users.map(bill => {
@@ -42,6 +42,12 @@ export default function Group({ bills, users, currUser }) {
     setNewBillTitle('');
     setNewBillUsers([]);
   }
+
+  const [showForm, setShowForm] = useState(false);
+
+  const toggleForm = () => {
+    setShowForm(!showForm);
+  };
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-rblue to-rorange flex flex-col justify-start items-center pt-12">
@@ -126,4 +132,3 @@ export default function Group({ bills, users, currUser }) {
     </div>
   );
 }
-
