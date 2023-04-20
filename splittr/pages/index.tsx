@@ -3,9 +3,10 @@ import { useRouter } from 'next/router';
 
 interface HomeProps {
   loggedIn: boolean;
+  currUser: any;
 }
 
-export default function Home({ loggedIn }: HomeProps) {
+export default function Home({ loggedIn, currUser }: HomeProps) {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const router = useRouter();

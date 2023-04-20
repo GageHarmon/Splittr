@@ -314,6 +314,13 @@ class check_logged_in(Resource):
     
 api.add_resource(check_logged_in, '/check')
 
+class logout(Resource):
+    def delete(self):
+        session['user_id'] = None
+        res = make_response(jsonify({ "login" : "Logged out"}),200)
+        return res
+api.add_resource(logout, '/logout')
+
 # @app.before_request
 # def print_hello():
 #     if session.get("user_id"):

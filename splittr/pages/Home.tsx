@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
-import Header from '../components/Header';
 import Footer from '../components/Footer';
+
 
 interface HomeProps {
   currUser: any;
@@ -12,16 +12,13 @@ export default function Home({ currUser }: HomeProps) {
   return (
     <div className="min-h-screen bg-gradient-to-br from-rblue to-rorange flex flex-col justify-start items-center pt-12">
 
-      {/* ++++++ HEADER ++++++ */}
-      <Header title="Splittr" />
-
       {/* ++++ USER SECTION ++++ */}
       <div className="bg-white p-6 mb-8 mt-20 rounded-lg shadow-2xl flex items-center space-x-4">
         <div>
           {/* Avatar would go here */}
         </div>
         <div>
-          <h2 className="text-xl font-bold text-dblue">Username</h2>
+          <h2 className="text-xl font-bold text-dblue">{currUser.username}</h2>
         </div>
       </div>
 
