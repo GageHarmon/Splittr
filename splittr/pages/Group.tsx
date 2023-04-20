@@ -41,10 +41,11 @@ export default function Group({ bills, users, currUser }) {
       total_amount: newBillAmount,
       bill_users: newBillUsers.map(username => {
         const user = users.find(user => user.username === username);
+        console.log(user)
         return { user_id: user.id }
       })
     }
-
+    console.log(newBill)
     try {
       const response = await fetch('/bills', {
         method: 'POST',
@@ -148,13 +149,14 @@ export default function Group({ bills, users, currUser }) {
                 ))}
               </select>
             </div>
+
             <div className="flex flex-col mb-4">
               <label className="font-bold mb-2" htmlFor="new-bill-users">
                 Added Users:
               </label>
               <ul>
                 {newBillUsers.map(user => (
-                  <li key={user}>{user}</li>
+                  <li key={user.id}>{user}</li>
                 ))}
               </ul>
             </div>
