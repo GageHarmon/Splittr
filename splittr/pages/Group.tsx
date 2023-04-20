@@ -45,5 +45,5 @@ export default function Group({ bills, users, currUser }) {
         </div>
       </div>
     </div>
-  );
-}
+    );
+  }
