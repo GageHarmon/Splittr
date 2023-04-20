@@ -15,7 +15,8 @@ class Users(db.Model, SerializerMixin):
     password = db.Column(db.String(), nullable=False)
     email = db.Column(db.String())
     created_at = db.Column(db.DateTime, server_default=db.func.now())
-    last_login = db.Column(db.DateTime, default=db.func.now(), onupdate=db.func.now())
+    last_login = db.Column(
+        db.DateTime, default=db.func.now(), onupdate=db.func.now())
     is_active = db.Column(db.Boolean, default=True)
     is_admin = db.Column(db.Boolean, default=False)
 

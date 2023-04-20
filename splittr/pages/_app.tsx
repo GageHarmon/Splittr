@@ -11,8 +11,11 @@ export default function App({ Component, pageProps }) {
   useEffect(() => {
     fetch('/check')
       .then((r) => r.json())
-      .then((data) => setLoggedIn(data.logged_in));
+      .then((data) => {
+        setLoggedIn(data.loggedIn);
+      });
   }, []);
+
 
   useEffect(() => {
     fetch('/users')

@@ -5,7 +5,7 @@ from flask_cors import CORS
 from models import db, Users, Bills, Items, BillItems, BillUsers
 
 # from flask_bcrypt import Bcrypt
-from services import app,bcrypt,db
+from services import app, bcrypt, db
 # Imports for using .env
 import os
 from dotenv import load_dotenv
@@ -88,11 +88,26 @@ class AllBills(Resource):
 
     def post(self):
         data = request.get_json()
-        bill = Bills(total_amount=data['total_amount'],
-                     created_by_user_id=data['created_by_user_id'])
+
+        # for user in data['bill_users']:
+        #     bill = Bills(
+        #         total_amount=data['total_amount'], user_id=user['user_id'])
+        #     db.session.add(bill)
+
+        bill = Bills(
+            total_amount=data['total_amount'], user_id=session.get('user_id'))
         db.session.add(bill)
         db.session.commit()
-        response = make_response(jsonify(bill.to_dict()), 201)
+        print(bill.id)
+
+        for user in data['bill_users']:
+            bill_user = BillUsers(
+                bill_id=bill.id, user_id=user['user_id'])
+            db.session.add(bill_user)
+
+        db.session.commit()
+        response = make_response(
+            jsonify([bill.to_dict() for bill in Bills.query.all()]), 201)
 
         return response
 
@@ -107,11 +122,11 @@ class BillsById(Resource):
 
         return response
 
-    def patch(self, id):
+    def post(self, id):
         data = request.get_json()
         bill = Bills.query.get(id)
         bill.total_amount = data['total_amount']
-        bill.created_by_user_id = data['created_by_user_id']
+        bill.user_id = data['user_id']
         db.session.commit()
         response = make_response(jsonify(bill.to_dict()), 200)
 
@@ -282,16 +297,20 @@ api.add_resource(BillUsersById, '/bill_users/<int:id>')
 class Login(Resource):
     def post(self):
         jsoned_request = request.get_json()
-        user = Users.query.filter(Users.username == jsoned_request["username"]).first()
+        user = Users.query.filter(
+            Users.username == jsoned_request["username"]).first()
         if user:
             session['user_id'] = user.id
             print(session)
-            res = make_response(jsonify(user.to_dict()),200)
+            res = make_response(jsonify(user.to_dict()), 200)
             return res
         else:
-            res = make_response(jsonify({ "login" : "Invalid User"}),500)
-            return res    
+            res = make_response(jsonify({"login": "Invalid User"}), 500)
+            return res
+
+
 api.add_resource(Login, '/login')
+
 
 class get_logged_user(Resource):
     def get(self):
@@ -299,19 +318,22 @@ class get_logged_user(Resource):
         user_id = session.get('user_id')
         if user_id:
             user = Users.query.filter(Users.id == session["user_id"]).first()
-            res = make_response(jsonify(user.to_dict()),200)
+            res = make_response(jsonify(user.to_dict()), 200)
             return res
-        
+
+
 api.add_resource(get_logged_user, '/logged_user')
+
 
 class check_logged_in(Resource):
     def get(self):
         user_id = session.get('user_id')
         if user_id:
             if user_id != None:
-                return make_response({"logged_in": True},200)
-        return make_response({"logged_in": False},200)
-    
+                return make_response({"logged_in": True}, 200)
+        return make_response({"logged_in": False}, 200)
+
+
 api.add_resource(check_logged_in, '/check')
 
 class logout(Resource):
