@@ -9,7 +9,9 @@ module.exports = {
     colors: {
       transparent: "transparent",
       'rblue': "#89C4E1",
-      'rorange': "#F7B500",
+      'rorange': "#FFBE79",
+      'dblue': "#243763",
+      'dorange': "#FFB562",
     },
     extend: {},
   },
