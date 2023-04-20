@@ -139,7 +139,7 @@ class AllItems(Resource):
 
     def post(self):
         data = request.get_json()
-        item = Items(name=data['name'], price=data['price'])
+        item = Items(title=data['title'], price=data['price'])
         db.session.add(item)
         db.session.commit()
         response = make_response(jsonify(item.to_dict()), 201)
@@ -160,7 +160,7 @@ class ItemsById(Resource):
     def patch(self, id):
         data = request.get_json()
         item = Items.query.get(id)
-        item.name = data['name']
+        item.title = data['title']
         item.price = data['price']
         db.session.commit()
         response = make_response(jsonify(item.to_dict()), 200)
