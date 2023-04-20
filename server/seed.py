@@ -34,11 +34,12 @@ with app.app_context():
     # generate fake bills
     bills = []
     for i in range(5):
+        name = fake.name()
         total_amount = fake.random_int(min=100, max=1000)
-        created_by_user_id = random.choice(users).id
-        print(created_by_user_id)
+        user_id = random.choice(users).id
+        print(user_id)
         bill = Bills(total_amount=total_amount,
-                     created_by_user_id=created_by_user_id)
+                     user_id=user_id)
         bills.append(bill)
     db.session.add_all(bills)
     db.session.commit()
