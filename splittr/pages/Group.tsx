@@ -4,6 +4,8 @@ import Footer from '../components/Footer';
 export default function Group({ bills, users, currUser }) {
   const [value, setValue] = useState('activity');
   const [groups, setGroups] = useState([]);
+  const [newBillTitle, setNewBillTitle] = useState('');
+  const [newBillUsers, setNewBillUsers] = useState([]);
 
   if (!currUser || bills.length === 0) {
     return <div>Loading.. </div>;
@@ -12,6 +14,34 @@ export default function Group({ bills, users, currUser }) {
   const filteredGroups = currUser.bill_users.map(bill => {
     return bills.filter(singlebill => singlebill.id === bill.bill_id)[0]
   })
+  console.log(filteredGroups)
+
+  const handleNewBillTitleChange = (event) => {
+    setNewBillTitle(event.target.value);
+  }
+
+  const handleNewBillUserChange = (event) => {
+    const selectedUser = event.target.value;
+    const userExists = newBillUsers.find(user => user === selectedUser);
+    if (!userExists) {
+      setNewBillUsers([...newBillUsers, selectedUser]);
+    }
+  }
+
+  const handleSubmit = (event) => {
+    event.preventDefault();
+    const newBill = {
+      title: newBillTitle,
+      total_amount: 0,
+      bill_users: newBillUsers.map(username => {
+        const user = users.find(user => user.username === username);
+        return { user_id: user.id }
+      })
+    }
+    setGroups([...groups, newBill]);
+    setNewBillTitle('');
+    setNewBillUsers([]);
+  }
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-rblue to-rorange flex flex-col justify-start items-center pt-12">
@@ -41,9 +71,59 @@ export default function Group({ bills, users, currUser }) {
               ))}
             </ul>
           </div>
-          <Footer activeLink={value} onChange={setValue} />
+          <form onSubmit={handleSubmit}>
+            <div className="flex flex-col mb-4">
+              <label className="font-bold mb-2" htmlFor="new-bill-title">
+                New Bill Title:
+              </label>
+              <input
+                className="border rounded py-2 px-3 text-grey-darkest"
+                id="new-bill-title"
+                type="text"
+                value={newBillTitle}
+                onChange={handleNewBillTitleChange}
+                required
+              />
+            </div>
+            <div className="flex flex-col mb-4">
+              <label className="font-bold mb-2" htmlFor="new-bill-users">
+                Add Users:
+              </label>
+              <select
+                className="border rounded py-2 px-3 text-grey-darkest"
+                id="new-bill-users"
+                value={newBillUsers}
+                onChange={handleNewBillUserChange}
+                required
+              >
+                <option value="" disabled>Select a user</option>
+                <option value="" disabled>Select a user</option>
+                {users && users.map(user => (
+                  <option key={user.id} value={user.username}>{user.username}</option>
+                ))}
+              </select>
+            </div>
+            <div className="flex flex-col mb-4">
+              <label className="font-bold mb-2" htmlFor="new-bill-users">
+                Added Users:
+              </label>
+              <ul>
+                {newBillUsers.map(user => (
+                  <li key={user}>{user}</li>
+                ))}
+              </ul>
+            </div>
+            <button
+              className="bg-rblue hover:bg-rorange text-white font-bold py-2 px-4 rounded"
+              type="submit"
+            >
+              Create Bill
+            </button>
+          </form>
         </div>
       </div>
+      <Footer activeLink={value} onChange={setValue} />
     </div>
   );
 }
+
