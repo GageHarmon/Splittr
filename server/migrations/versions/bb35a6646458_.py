@@ -1,8 +1,8 @@
-"""Create tables
+"""empty message
 
-Revision ID: b22adef6c2c5
+Revision ID: bb35a6646458
 Revises: 
-Create Date: 2023-04-14 15:31:17.169884
+Create Date: 2023-04-20 12:06:15.020667
 
 """
 from alembic import op
@@ -10,7 +10,7 @@ import sqlalchemy as sa
 
 
 # revision identifiers, used by Alembic.
-revision = 'b22adef6c2c5'
+revision = 'bb35a6646458'
 down_revision = None
 branch_labels = None
 depends_on = None
@@ -27,28 +27,29 @@ def upgrade():
     sa.Column('last_login', sa.DateTime(), nullable=True),
     sa.Column('is_active', sa.Boolean(), nullable=True),
     sa.Column('is_admin', sa.Boolean(), nullable=True),
-    sa.PrimaryKeyConstraint('id'),
-    sa.UniqueConstraint('username')
+    sa.PrimaryKeyConstraint('id', name=op.f('pk_users')),
+    sa.UniqueConstraint('username', name=op.f('uq_users_username'))
     )
     op.create_table('bills',
     sa.Column('id', sa.Integer(), nullable=False),
-    sa.Column('total_amount', sa.Float(), nullable=False),
+    sa.Column('name', sa.String(), nullable=True),
+    sa.Column('total_amount', sa.Float(), nullable=True),
+    sa.Column('user_id', sa.Integer(), nullable=False),
     sa.Column('created_at', sa.DateTime(), server_default=sa.text('(CURRENT_TIMESTAMP)'), nullable=True),
-    sa.Column('created_by_user_id', sa.Integer(), nullable=False),
-    sa.ForeignKeyConstraint(['created_by_user_id'], ['users.id'], name=op.f('fk_bills_created_by_user_id_users')),
-    sa.PrimaryKeyConstraint('id')
+    sa.ForeignKeyConstraint(['user_id'], ['users.id'], name=op.f('fk_bills_user_id_users')),
+    sa.PrimaryKeyConstraint('id', name=op.f('pk_bills'))
     )
     op.create_table('items',
     sa.Column('id', sa.Integer(), nullable=False),
-    sa.Column('title', sa.String(), nullable=False),
+    sa.Column('title', sa.String(), nullable=True),
     sa.Column('description', sa.String(), nullable=True),
-    sa.Column('price', sa.Float(), nullable=False),
-    sa.Column('user_id', sa.Integer(), nullable=False),
-    sa.Column('status', sa.String(), nullable=False),
+    sa.Column('price', sa.Float(), nullable=True),
+    sa.Column('user_id', sa.Integer(), nullable=True),
+    sa.Column('status', sa.String(), nullable=True),
     sa.Column('created_at', sa.DateTime(), server_default=sa.text('(CURRENT_TIMESTAMP)'), nullable=True),
     sa.Column('updated_at', sa.DateTime(), nullable=True),
     sa.ForeignKeyConstraint(['user_id'], ['users.id'], name=op.f('fk_items_user_id_users')),
-    sa.PrimaryKeyConstraint('id')
+    sa.PrimaryKeyConstraint('id', name=op.f('pk_items'))
     )
     op.create_table('bill_items',
     sa.Column('id', sa.Integer(), nullable=False),
@@ -56,7 +57,7 @@ def upgrade():
     sa.Column('item_id', sa.Integer(), nullable=False),
     sa.ForeignKeyConstraint(['bill_id'], ['bills.id'], name=op.f('fk_bill_items_bill_id_bills')),
     sa.ForeignKeyConstraint(['item_id'], ['items.id'], name=op.f('fk_bill_items_item_id_items')),
-    sa.PrimaryKeyConstraint('id')
+    sa.PrimaryKeyConstraint('id', name=op.f('pk_bill_items'))
     )
     op.create_table('bill_users',
     sa.Column('id', sa.Integer(), nullable=False),
@@ -64,7 +65,7 @@ def upgrade():
     sa.Column('user_id', sa.Integer(), nullable=False),
     sa.ForeignKeyConstraint(['bill_id'], ['bills.id'], name=op.f('fk_bill_users_bill_id_bills')),
     sa.ForeignKeyConstraint(['user_id'], ['users.id'], name=op.f('fk_bill_users_user_id_users')),
-    sa.PrimaryKeyConstraint('id')
+    sa.PrimaryKeyConstraint('id', name=op.f('pk_bill_users'))
     )
     # ### end Alembic commands ###
 

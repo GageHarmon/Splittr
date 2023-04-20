@@ -19,11 +19,21 @@ export default function BillItems({ bills, currUser }) {
             <p className="text-dblue font-bold">{bill.title}</p>
             {bill.bill_items.map(item => (
               <div key={item.id} className="bg-white p-4 rounded-lg shadow-2xl mt-2">
-                <p className="font-bold text-dblue">Item Title: {item.item.title}</p>
-                <p className="text-dblue">Item Description: {item.item.description}</p>
-                <p className="text-dblue">Item Amount: ${item.item.price}.00</p>
-                <p className="text-dblue">Item status: {item.item.status}</p>
-                <p className="text-dblue">Created: {item.item.updated_at}</p>
+                <p>
+                  <span className="text-dblue font-bold">Item Title:</span> <span className="text-dblue">{item.item.title}</span>
+                </p>
+                <p>
+                  <span className="text-dblue font-bold">Item Description:</span> <span className="text-dblue">{item.item.description}</span>
+                </p>
+                <p>
+                  <span className="text-dblue font-bold">Item Amount:</span> <span className="text-dblue">${item.item.price}.00</span>
+                </p>
+                <p>
+                  <span className="text-dblue font-bold">Item status:</span> <span className="text-dblue">{item.item.status}</span>
+                </p>
+                <p>
+                  <span className="text-dblue font-bold">Created:</span> <span className="text-dblue">{item.item.updated_at}</span>
+                </p>
               </div>
             ))}
           </div>

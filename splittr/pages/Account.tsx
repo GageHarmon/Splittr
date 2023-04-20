@@ -37,14 +37,20 @@ export default function UserActivity({ bills, currUser }) {
                   {bill.bill_items.map(item => (
                     <li key={item.id} className="mt-2">
                       <div>
-                        <p className="text-dblue">Title: {item.item.title} </p>
-                        <p className="text-dblue">Description: {item.item.description}</p>
-                        <p className="text-dblue">Price: ${item.item.price}.00</p>
+                        <p>
+                        <span className="text-dblue font-bold">Name:</span> <span className="text-dblue">{item.item.title}</span>
+                        </p>
+                        <p>
+                          <span className="text-dblue font-bold">Description:</span> <span className="text-dblue">{item.item.description}</span>
+                        </p>
+                        <p>
+                        <span className="text-dblue font-bold">Price:</span> <span className="text-dblue">${item.item.price}.00 </span>
+                        </p>
                       </div>
                     </li>
                   ))}
                 </ul>
-                <button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded mt-4" onClick={() => handlePay(bill.id)}>Pay</button>
+                <button className="bg-blue-500 hover:bg-blue-700 text-dblue font-bold py-2 px-4 rounded mt-4" onClick={() => handlePay(bill.id)}>Pay</button>
               </div>
             </li>
           ))}

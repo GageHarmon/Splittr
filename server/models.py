@@ -26,10 +26,10 @@ class Bills(db.Model, SerializerMixin):
     __tablename__ = 'bills'
 
     id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String())
     total_amount = db.Column(db.Float)
+    user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
     created_at = db.Column(db.DateTime, server_default=db.func.now())
-    created_by_user_id = db.Column(
-        db.Integer, db.ForeignKey('users.id'), nullable=False)
 
     serialize_rules = ('-bill_items.bill', '-bill_users.bill', '-user.bills')
 
