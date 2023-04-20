@@ -7,15 +7,15 @@ from app import app
 fake = Faker()
 
 with app.app_context():
-    print ("Deleting Users")
+    print("Deleting Users")
     Users.query.delete()
-    print ("Deleting Bills")
+    print("Deleting Bills")
     Bills.query.delete()
-    print ("Deleting Items")
+    print("Deleting Items")
     Items.query.delete()
-    print ("Deleting BillItems")
+    print("Deleting BillItems")
     BillItems.query.delete()
-    print ("Deleting BillUsers")
+    print("Deleting BillUsers")
     BillUsers.query.delete()
 
 # generate fake users
@@ -25,7 +25,8 @@ with app.app_context():
         password = fake.password()
         email = fake.email()
         is_admin = random.choice([True, False])
-        user = Users(username=username, password=password, email=email, is_admin=is_admin)
+        user = Users(username=username, password=password,
+                     email=email, is_admin=is_admin)
         users.append(user)
     db.session.add_all(users)
     db.session.commit()
@@ -36,7 +37,8 @@ with app.app_context():
         total_amount = fake.random_int(min=100, max=1000)
         created_by_user_id = random.choice(users).id
         print(created_by_user_id)
-        bill = Bills(total_amount=total_amount, created_by_user_id=created_by_user_id)
+        bill = Bills(total_amount=total_amount,
+                     created_by_user_id=created_by_user_id)
         bills.append(bill)
     db.session.add_all(bills)
     db.session.commit()
@@ -48,13 +50,14 @@ with app.app_context():
         description = fake.paragraph()
         price = fake.random_int(min=10, max=100)
         user_id = random.choice(users).id
-        status = random.choice(['available', 'sold'])
-        item = Items(title=title, description=description, price=price, user_id=user_id, status=status)
+        status = random.choice(['balance', 'paid'])
+        item = Items(title=title, description=description,
+                     price=price, user_id=user_id, status=status)
         items.append(item)
 
     db.session.add_all(items)
     db.session.commit()
-    
+
     # generate fake bill_items
     bill_items = []
     for bill in bills:
@@ -65,7 +68,7 @@ with app.app_context():
 
     db.session.add_all(bill_items)
     db.session.commit()
-    
+
     # generate fake bill_users
     bill_users = []
     for bill in bills:
@@ -73,8 +76,8 @@ with app.app_context():
         for user in users_for_bill:
             bill_user = BillUsers(bill_id=bill.id, user_id=user.id)
             bill_users.append(bill_user)
-            
+
     db.session.add_all(bill_users)
     db.session.commit()
-    
+
     # add fake data to database

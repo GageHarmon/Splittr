@@ -2,29 +2,37 @@ import React, { useState, useEffect } from 'react';
 
 export default function Group({ bills, users, currUser }) {
   const [groups, setGroups] = useState([]);
-
-  if (!currUser) {
+  console.log(bills)
+  console.log(currUser)
+  if (!currUser || bills.length === 0) {
     return <div>Loading.. </div>;
   }
+  const filteredGroups = currUser.bill_users.map(bill => {
+    return bills.filter(singlebill => singlebill.id === bill.bill_id)[0]
+  }
 
-  const filteredGroups = bills.map(group => {
-    return currUser.bill_users.some(groupUser => groupUser.group_id === group.id);
-  });
-  console.log(filteredGroups);
+  )
+
   return (
     <div className="user-activity">
       <h2>{currUser.username}'s Groups:</h2>
       <div>
-        <p>Hello World!</p>
         <p>
-          {currUser.username} has {filteredGroups.length} groups.
+          {currUser.username} has {filteredGroups.length} Groups.
         </p>
         <ul>
-          {filteredGroups.map(group => (
-            <li key={group.id}>
+          {filteredGroups.map(bill => (
+            <li key={bill.id}>
               <div>
-                <p>Group Name: {group.name}</p>
-
+                <p>Bill Amount: {bill.total_amount}</p>
+                {bill.bill_users.map(user => (
+                  <li key={user.id}>
+                    <div>
+                      <p>Username: {user.user.username} </p>
+                    </div>
+                  </li>
+                ))
+                }
               </div>
             </li>
           ))}

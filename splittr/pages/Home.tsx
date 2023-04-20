@@ -26,33 +26,33 @@ export default function Home({ currUser }: HomeProps) {
         </Toolbar>
       </AppBar>
 
-        {/* <MainProfile> */}
-          <Grid container spacing={2} alignItems="center">
-            <Grid item>
-              {/* <LargeAvatar /> */}
-            </Grid>
-            <Grid item>
-              <Typography variant="h6">Username</Typography>
-            </Grid>
-          </Grid>
-        {/* </MainProfile> */}
-
-        <Grid container spacing={3} style={{ padding: 24 }}>
-          <Grid item xs={12} md={6}>
-            {/* ... */}
-          </Grid>
-          <Grid item xs={12} md={6}>
-            {/* ... */}
-          </Grid>
+      {/* <MainProfile> */}
+      <Grid container spacing={2} alignItems="center">
+        <Grid item>
+          {/* <LargeAvatar /> */}
         </Grid>
+        <Grid item>
+          <Typography variant="h6">Username</Typography>
+        </Grid>
+      </Grid>
+      {/* </MainProfile> */}
 
-        {/* <Footer> */}
-          <BottomNavigation value={value} onChange={handleChange} showLabels>
-            <BottomNavigationAction label="Account" value="Account" icon={<AccountCircleIcon />} />
-            <BottomNavigationAction label="Activity" value="Activity" icon={<ListAltIcon />} />
-            <BottomNavigationAction label="Group" value="Group" icon={<GroupIcon />} />
-          </BottomNavigation>
-        {/* </Footer> */}
-      </div>
+      <Grid container spacing={3} style={{ padding: 24 }}>
+        <Grid item xs={12} md={6}>
+          {/* ... */}
+        </Grid>
+        <Grid item xs={12} md={6}>
+          {/* ... */}
+        </Grid>
+      </Grid>
+
+      {/* <Footer> */}
+      <BottomNavigation value={value} onChange={handleChange} showLabels>
+        <BottomNavigationAction label="Account" value="Account" icon={<AccountCircleIcon />} />
+        <BottomNavigationAction label="Activity" value="Activity" icon={<ListAltIcon />} />
+        <BottomNavigationAction label="Group" value="Group" icon={<GroupIcon />} />
+      </BottomNavigation>
+      {/* </Footer> */}
+    </div>
   );
-  }
+}
