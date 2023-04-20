@@ -22,11 +22,9 @@ with app.app_context():
     users = []
     for i in range(10):
         username = fake.unique.user_name()
-        password = fake.password()
         email = fake.email()
-        is_admin = random.choice([True, False])
-        user = Users(username=username, password=password,
-                     email=email, is_admin=is_admin)
+        user = Users(username=username, email=email)
+        user.password_hash = "test"
         users.append(user)
     db.session.add_all(users)
     db.session.commit()

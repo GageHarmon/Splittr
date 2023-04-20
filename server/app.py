@@ -36,8 +36,8 @@ class AllUsers(Resource):
 
     def post(self):
         data = request.get_json()
-        user = Users(username=data['username'],
-                     password=data['password'], email=data['email'])
+        user = Users(username=data['username'], email=data['email'])
+        user.password_hash = data['password']
         db.session.add(user)
         db.session.commit()
         response = make_response(jsonify(user.to_dict()), 201)
@@ -296,17 +296,17 @@ api.add_resource(BillUsersById, '/bill_users/<int:id>')
 
 class Login(Resource):
     def post(self):
-        jsoned_request = request.get_json()
-        user = Users.query.filter(
-            Users.username == jsoned_request["username"]).first()
-        if user:
-            session['user_id'] = user.id
-            print(session)
-            res = make_response(jsonify(user.to_dict()), 200)
-            return res
-        else:
-            res = make_response(jsonify({"login": "Invalid User"}), 500)
-            return res
+        try:
+            jsoned_request = request.get_json()
+            user = Users.query.filter(
+                Users.username == jsoned_request["username"]).first()
+            if user.authenticate(jsoned_request["password"]):
+                session['user_id'] = user.id
+                res = make_response(jsonify(user.to_dict()), 200)
+                return res
+        except Exception as e:
+                res = make_response(jsonify({"error": [e.__str__()]}), 500)
+                return res
 
 
 api.add_resource(Login, '/login')
@@ -314,7 +314,6 @@ api.add_resource(Login, '/login')
 
 class get_logged_user(Resource):
     def get(self):
-        print(session)
         user_id = session.get('user_id')
         if user_id:
             user = Users.query.filter(Users.id == session["user_id"]).first()

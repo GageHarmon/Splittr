@@ -82,21 +82,21 @@ export default function Group({ bills, users, currUser }) {
         <div className="user-activity">
           <h2 className="text-3xl font-bold text-dblue">{currUser.username}'s Groups:</h2>
           <div>
-            <p className="text-lg font-bold mb-2">
-              {currUser.username} has {filteredGroups.length} Groups.
+            <p className="text-lg font-bold text-dblue mb-2">
+              {currUser.username} has {filteredGroups.length} Groups
             </p>
             <ul>
               {filteredGroups.map(bill => (
                 <li key={bill.id} className="bg-gray-100 rounded-md shadow-md p-4 mb-4">
                   <div className="flex justify-between items-center mb-2">
                     <h3 className="text-lg font-bold">{bill.title}</h3>
-                    <p className="font-bold text-lg">Entire Bill:
+                    <p className="font-bold text-lg text-dblue m-auto">Entire Bill:
                       ${bill.total_amount}.00</p>
                   </div>
                   <ul>
                     {bill.bill_users.map(user => (
-                      <li key={user.id} className="mb-2">
-                        <p>Username: {user.user.username} </p>
+                      <li key={user.id} className="mb-2 ">
+                        <p className="text-dblue">Username: {user.user.username} </p>
                       </li>
                     ))}
                   </ul>
@@ -106,8 +106,8 @@ export default function Group({ bills, users, currUser }) {
           </div>
           <form onSubmit={handleSubmit}>
             <div className="flex flex-col mb-4">
-              <label className="font-bold mb-2" htmlFor="new-bill-title">
-                New Bill Title:
+              <label className="font-bold text-dblue mb-2" htmlFor="new-bill-title">
+                New Bill Name
               </label>
               <input
                 className="border rounded py-2 px-3 text-grey-darkest"
@@ -119,8 +119,8 @@ export default function Group({ bills, users, currUser }) {
               />
             </div>
             <div className="flex flex-col mb-4">
-              <label className="font-bold mb-2" htmlFor="new-bill-amount">
-                Amount:
+              <label className="font-bold text-dblue mb-2" htmlFor="new-bill-amount">
+                Amount
               </label>
               <input
                 className="border rounded py-2 px-3 text-grey-darkest"
@@ -133,8 +133,8 @@ export default function Group({ bills, users, currUser }) {
             </div>
 
             <div className="flex flex-col mb-4">
-              <label className="font-bold mb-2" htmlFor="new-bill-users">
-                Add Users:
+              <label className="font-bold text-dblue mb-2" htmlFor="new-bill-users">
+                Add Users
               </label>
               <select
                 className="border rounded py-2 px-3 text-grey-darkest"
@@ -151,19 +151,18 @@ export default function Group({ bills, users, currUser }) {
             </div>
 
             <div className="flex flex-col mb-4">
-              <label className="font-bold mb-2" htmlFor="new-bill-users">
-                Added Users:
+              <label className="font-bold text-dblue mb-2" htmlFor="new-bill-users">
+                Added Users
               </label>
               <ul>
                 {newBillUsers.map(user => (
-                  <li key={user.id}>{user}</li>
+                  <li key={user.id} className= " text-dblue">{user}</li>
                 ))}
               </ul>
             </div>
             <button
-              className="bg-rblue hover:bg-rorange text-white font-bold py-2 px-4 rounded"
-              type="submit"
-            >
+              className="bg-rorange hover:bg-rorange text-dblue font-bold py-2 px-4 rounded"
+              type="submit">
               Create Bill
             </button>
           </form>
