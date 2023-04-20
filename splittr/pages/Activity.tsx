@@ -30,6 +30,7 @@ export default function BillItems({ bills, currUser }) {
           </div>
         ))}
       <Footer activeLink={value} onChange={setValue} />
+      </div>
     </div>
   );
 }
