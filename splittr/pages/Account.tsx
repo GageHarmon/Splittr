@@ -12,6 +12,11 @@ export default function UserActivity({ bills, currUser }) {
     return currUser.bill_users.some(billUser => billUser.bill_id === bill.id);
   });
 
+  const handlePay = (billId) => {
+    // Implement your pay functionality here
+    console.log(`Paid bill ${billId}`);
+  }
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-rblue to-rorange flex flex-col justify-start items-center pt-12">
       <div className="bg-white p-6 mb-8 rounded-lg shadow-2xl">
@@ -39,6 +44,7 @@ export default function UserActivity({ bills, currUser }) {
                     </li>
                   ))}
                 </ul>
+                <button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded mt-4" onClick={() => handlePay(bill.id)}>Pay</button>
               </div>
             </li>
           ))}

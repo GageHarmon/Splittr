@@ -4,6 +4,8 @@ import Footer from '../components/Footer';
 export default function Group({ bills, users, currUser }) {
   const [value, setValue] = useState('activity');
   const [groups, setGroups] = useState([]);
+  const [newBillTitle, setNewBillTitle] = useState('');
+  const [newBillUsers, setNewBillUsers] = useState([]);
 
   if (!currUser || bills.length === 0) {
     return <div className="text-dblue">Loading.. </div>;
@@ -12,6 +14,34 @@ export default function Group({ bills, users, currUser }) {
   const filteredGroups = currUser.bill_users.map(bill => {
     return bills.filter(singlebill => singlebill.id === bill.bill_id)[0]
   })
+  console.log(filteredGroups)
+
+  const handleNewBillTitleChange = (event) => {
+    setNewBillTitle(event.target.value);
+  }
+
+  const handleNewBillUserChange = (event) => {
+    const selectedUser = event.target.value;
+    const userExists = newBillUsers.find(user => user === selectedUser);
+    if (!userExists) {
+      setNewBillUsers([...newBillUsers, selectedUser]);
+    }
+  }
+
+  const handleSubmit = (event) => {
+    event.preventDefault();
+    const newBill = {
+      title: newBillTitle,
+      total_amount: 0,
+      bill_users: newBillUsers.map(username => {
+        const user = users.find(user => user.username === username);
+        return { user_id: user.id }
+      })
+    }
+    setGroups([...groups, newBill]);
+    setNewBillTitle('');
+    setNewBillUsers([]);
+  }
 
   const [showForm, setShowForm] = useState(false);
 
@@ -22,68 +52,82 @@ export default function Group({ bills, users, currUser }) {
   return (
     <div className="min-h-screen bg-gradient-to-br from-rblue to-rorange flex flex-col justify-start items-center pt-12">
       <div className="bg-white p-6 mb-8 rounded-lg shadow-2xl">
-        <h2 className="text-3xl font-bold text-dblue">{currUser.username}'s Groups</h2>
-      </div>
-
-      {/* +++++ USER GROUP SECTION +++++ */}
-      <div className="bg-white p-6 mb-8 rounded-lg shadow-2xl w-full max-w-screen-md mt-20">
-        <p className="text-dblue font-bold">
-          {currUser.username} has {filteredGroups.length} Groups.
-        </p>
-        <ul>
-          {filteredGroups.map(bill => (
-            <li key={bill.id} className="mb-4">
-              <div className="bg-white p-4 rounded-lg shadow-2xl">
-                <div className="flex justify-between items-center mb-2">
-                  <h3 className="text-dblue font-bold">{bill.title}</h3>
-                  <p className="text-dblue font-bold">Entire Bill: ${bill.total_amount}.00</p>
-                </div>
-                <ul>
-                  {bill.bill_users.map(user => (
-                    <li key={user.id} className="mt-2">
-                      <p className="text-dblue">Username: {user.user.username} </p>
-                    </li>
-                  ))}
-                </ul>
-              </div>
-            </li>
-          ))}
-        </ul>
-        <button
-          className="bg-rblue text-white font-bold py-2 px-4 rounded mt-4"onClick={toggleForm}>
-          Create Group
-        </button>
-
-        {showForm && (
-          <form className="mt-4">
-            <div className="mb-4">
-              <label htmlFor="groupName" className="block text-dblue font-bold mb-2">
-                Group Name:
+        <div className="user-activity">
+          <h2 className="text-3xl font-bold text-dblue">{currUser.username}'s Groups:</h2>
+          <div>
+            <p className="text-lg font-bold mb-2">
+              {currUser.username} has {filteredGroups.length} Groups.
+            </p>
+            <ul>
+              {filteredGroups.map(bill => (
+                <li key={bill.id} className="bg-gray-100 rounded-md shadow-md p-4 mb-4">
+                  <div className="flex justify-between items-center mb-2">
+                    <h3 className="text-lg font-bold">{bill.title}</h3>
+                    <p className="font-bold text-lg">Entire Bill:
+                      ${bill.total_amount}.00</p>
+                  </div>
+                  <ul>
+                    {bill.bill_users.map(user => (
+                      <li key={user.id} className="mb-2">
+                        <p>Username: {user.user.username} </p>
+                      </li>
+                    ))}
+                  </ul>
+                </li>
+              ))}
+            </ul>
+          </div>
+          <form onSubmit={handleSubmit}>
+            <div className="flex flex-col mb-4">
+              <label className="font-bold mb-2" htmlFor="new-bill-title">
+                New Bill Title:
               </label>
               <input
+                className="border rounded py-2 px-3 text-grey-darkest"
+                id="new-bill-title"
                 type="text"
-                id="groupName"
-                className="shadow appearance-none border rounded w-full py-2 px-3 text-dblue leading-tight focus:outline-none focus:shadow-outline"
-                placeholder="Enter group name"
+                value={newBillTitle}
+                onChange={handleNewBillTitleChange}
+                required
               />
             </div>
-            {/* Add more form fields as needed */}
+            <div className="flex flex-col mb-4">
+              <label className="font-bold mb-2" htmlFor="new-bill-users">
+                Add Users:
+              </label>
+              <select
+                className="border rounded py-2 px-3 text-grey-darkest"
+                id="new-bill-users"
+                value={newBillUsers}
+                onChange={handleNewBillUserChange}
+                required
+              >
+                <option value="" disabled>Select a user</option>
+                <option value="" disabled>Select a user</option>
+                {users && users.map(user => (
+                  <option key={user.id} value={user.username}>{user.username}</option>
+                ))}
+              </select>
+            </div>
+            <div className="flex flex-col mb-4">
+              <label className="font-bold mb-2" htmlFor="new-bill-users">
+                Added Users:
+              </label>
+              <ul>
+                {newBillUsers.map(user => (
+                  <li key={user}>{user}</li>
+                ))}
+              </ul>
+            </div>
             <button
+              className="bg-rblue hover:bg-rorange text-white font-bold py-2 px-4 rounded"
               type="submit"
-              className="bg-rblue text-white font-bold py-2 px-4 rounded"
             >
-              Submit
+              Create Bill
             </button>
           </form>
-        )}
+        </div>
       </div>
-      {/* <div className="bg-white p-6 mb-8 rounded-lg shadow-2xl">
-        <form >
-          <label htmlFor="group">Create a Group</label>
-          <input type="text" name="group" id="group" />
-          <button type="submit">Submit</button>
-        </form>
-      </div> */}
       <Footer activeLink={value} onChange={setValue} />
     </div>
   );
