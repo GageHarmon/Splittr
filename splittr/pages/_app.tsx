@@ -1,5 +1,6 @@
 import '@/styles/globals.css';
 import { useEffect, useState } from 'react';
+import Header from '../components/Header';
 
 export default function App({ Component, pageProps }) {
   const [currUser, setCurrUser] = useState(null);
@@ -66,6 +67,9 @@ export default function App({ Component, pageProps }) {
 
 
   return (
+  <>
+    <Header title="Splittr" currUser={pageProps.currUser}/>
     <Component {...pageProps} currUser={currUser} loggedIn={loggedIn} bills={bills} users={users} />
+  </>
   );
 }

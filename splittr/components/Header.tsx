@@ -1,14 +1,41 @@
 import React from 'react';
+import { useRouter } from 'next/router';
 
 interface HeaderProps {
   title: string;
+  currUser?: any;
 }
 
 const Header: React.FC<HeaderProps> = ({ title }) => {
+  const router = useRouter();
+
+  function handleLogout(e) {
+    e.preventDefault();
+    fetch("/logout",{
+      method: "DELETE",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    })
+    router.push('/')
+  }
+
   return (
-    <div className="bg-white p-6 mb-8 rounded-lg shadow-2xl">
-      <h2 className="text-3xl font-bold text-dblue">{title}</h2>
-    </div>
+    <header className='bg-gradient-to-br from-rorange to-rblue'>
+      <div className='container mx-auto px-4'>
+        <div className='flex justify-between items-center'>
+          <div className='text-dblue text-2xl font-bold'>{title}</div>
+          <nav>
+            {/* You can add more nav links here */}
+            <form onSubmit={handleLogout} className='inline'>
+              <button type="submit" className='text-dblue font-semibold'>
+                Logout
+              </button>
+            </form>
+          </nav>
+        </div>
+      </div>
+    </header>
   );
 };
 

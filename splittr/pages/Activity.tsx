@@ -20,7 +20,7 @@ export default function BillItems({ bills, currUser }) {
             {bill.bill_items.map(item => (
               <div key={item.id} className="bg-white p-4 rounded-lg shadow-2xl mt-2">
                 <p>
-                  <span className="text-dblue font-bold">Item Title:</span> <span className="text-dblue">{item.item.title}</span>
+                  <span className="text-dblue font-bold">Item Name:</span> <span className="text-dblue">{item.item.title}</span>
                 </p>
                 <p>
                   <span className="text-dblue font-bold">Item Description:</span> <span className="text-dblue">{item.item.description}</span>
