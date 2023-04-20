@@ -5,7 +5,9 @@ export default function Group({ bills, users, currUser }) {
   const [value, setValue] = useState('activity');
   const [groups, setGroups] = useState([]);
   const [newBillTitle, setNewBillTitle] = useState('');
+  const [newBillAmount, setNewBillAmount] = useState(0);
   const [newBillUsers, setNewBillUsers] = useState([]);
+  const [showForm, setShowForm] = useState(false);
 
   if (!currUser || bills.length === 0) {
     return <div className="text-dblue">Loading.. </div>;
@@ -20,6 +22,10 @@ export default function Group({ bills, users, currUser }) {
     setNewBillTitle(event.target.value);
   }
 
+  const handleNewBillAmountChange = (event) => {
+    setNewBillAmount(event.target.value);
+  }
+
   const handleNewBillUserChange = (event) => {
     const selectedUser = event.target.value;
     const userExists = newBillUsers.find(user => user === selectedUser);
@@ -28,22 +34,42 @@ export default function Group({ bills, users, currUser }) {
     }
   }
 
-  const handleSubmit = (event) => {
+  const handleSubmit = async (event) => {
     event.preventDefault();
     const newBill = {
       title: newBillTitle,
-      total_amount: 0,
+      total_amount: newBillAmount,
       bill_users: newBillUsers.map(username => {
         const user = users.find(user => user.username === username);
         return { user_id: user.id }
       })
     }
-    setGroups([...groups, newBill]);
-    setNewBillTitle('');
-    setNewBillUsers([]);
-  }
 
-  const [showForm, setShowForm] = useState(false);
+    try {
+      const response = await fetch('/bills', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(newBill)
+      });
+
+      if (response.ok) {
+        const data = await response.json();
+        setGroups([...groups, data]);
+        setNewBillTitle('');
+        setNewBillAmount(0);
+        setNewBillUsers([]);
+        setShowForm(false);
+      } else {
+        throw new Error('Error creating new bill');
+      }
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+
 
   const toggleForm = () => {
     setShowForm(!showForm);
@@ -92,6 +118,20 @@ export default function Group({ bills, users, currUser }) {
               />
             </div>
             <div className="flex flex-col mb-4">
+              <label className="font-bold mb-2" htmlFor="new-bill-amount">
+                Amount:
+              </label>
+              <input
+                className="border rounded py-2 px-3 text-grey-darkest"
+                id="new-bill-amount"
+                type="number"
+                value={newBillAmount}
+                onChange={handleNewBillAmountChange}
+                required
+              />
+            </div>
+
+            <div className="flex flex-col mb-4">
               <label className="font-bold mb-2" htmlFor="new-bill-users">
                 Add Users:
               </label>
@@ -102,7 +142,6 @@ export default function Group({ bills, users, currUser }) {
                 onChange={handleNewBillUserChange}
                 required
               >
-                <option value="" disabled>Select a user</option>
                 <option value="" disabled>Select a user</option>
                 {users && users.map(user => (
                   <option key={user.id} value={user.username}>{user.username}</option>
