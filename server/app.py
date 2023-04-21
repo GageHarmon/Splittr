@@ -26,6 +26,21 @@ CORS(app)
 app.secret_key = os.environ.get("secretkey")
 
 
+@app.route('/users/<int:user_id>', methods=['PATCH'])
+def update_user(user_id):
+    data = request.get_json()
+    user = Users.query.get(user_id)
+
+    if user is None:
+        return jsonify({"error": "User not found"}), 404
+
+    if 'username' in data:
+        user.username = data['username']
+        db.session.commit()
+
+    return jsonify(user.to_dict()), 200
+
+
 class AllUsers(Resource):
     def get(self):
         users = Users.query.all()
@@ -176,7 +191,10 @@ class ItemsById(Resource):
         data = request.get_json()
         item = Items.query.get(id)
         item.title = data['title']
+        item.description = data['description']
         item.price = data['price']
+        item.status = data['status']
+        item.user_id = data['user_id']
         db.session.commit()
         response = make_response(jsonify(item.to_dict()), 200)
 
@@ -249,7 +267,6 @@ class AllBillUsers(Resource):
         bill_users = BillUsers.query.all()
         bill_users_list = [bill_users.to_dict() for bill_users in bill_users]
         response = make_response(jsonify(bill_users_list), 200)
-
         return response
 
     def post(self):
@@ -258,11 +275,33 @@ class AllBillUsers(Resource):
         db.session.add(bill_user)
         db.session.commit()
         response = make_response(jsonify(bill_user.to_dict()), 201)
-
         return response
 
+    def patch(self, id):
+        bill_user = BillUsers.query.filter_by(id=id).first()
+        if not bill_user:
+            return {'message': 'Bill user not found'}, 404
 
-api.add_resource(AllBillUsers, '/bill_users')
+        data = request.get_json()
+        if 'user_id' in data:
+            bill_user.user_id = data['user_id']
+        if 'bill_id' in data:
+            bill_user.bill_id = data['bill_id']
+
+        db.session.commit()
+        return jsonify(bill_user.to_dict()), 200
+
+    def delete(self, id):
+        bill_user = BillUsers.query.filter_by(id=id).first()
+        if not bill_user:
+            return {'message': 'Bill user not found'}, 404
+
+        db.session.delete(bill_user)
+        db.session.commit()
+        return {'message': 'Bill user deleted successfully'}, 200
+
+
+api.add_resource(AllBillUsers, '/bill_users', '/bill_users/<int:id>')
 
 
 class BillUsersById(Resource):
