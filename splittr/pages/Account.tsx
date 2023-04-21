@@ -19,7 +19,7 @@ export default function UserActivity({ bills, currUser }) {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-rblue to-rorange flex flex-col justify-start items-center pt-12">
-      <div className="bg-rorange p-6 mb-8 rounded-lg shadow-2xl">
+      <div className="bg-gradient-to-br from-rorange to-rblue p-6 mb-8 rounded-lg shadow-2xl">
         <h2 className="text-3xl font-bold text-dblue">{currUser.username}'s Account</h2>
       </div>
 

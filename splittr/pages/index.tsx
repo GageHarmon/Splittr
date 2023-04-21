@@ -33,7 +33,7 @@ export default function Home({ loggedIn, currUser }: HomeProps) {
     });
 
     if (response.ok) {
-      const user = await response.json();
+      const currUser = await response.json();
       router.push('/Home');
     } else {
       alert('Invalid username or password');
