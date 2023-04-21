@@ -13,14 +13,40 @@ export default function Home({ currUser }: HomeProps) {
   
   const [value, setValue] = useState('activity');
   const [showForm, setShowForm] = useState(false);
+  const [newUsername, setNewUsername] = useState('');
 
   const toggleForm = () => {
     setShowForm(!showForm);
   };
 
-  const handleSubmit = (e) => {
+  const handleUsernameChange = (e) => {
+    setNewUsername(e.target.value);
+  };
+
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    // Implement form submission logic here.
+  
+    try {
+      const response = await fetch(`/users/${currUser.id}`, {
+        method: 'PATCH',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ username: newUsername }), // pass value of input field
+      });
+  
+      if (response.ok) {
+        const updatedUser = await response.json();
+        // Update currUser with new username
+        currUser.username = updatedUser.username;
+        // Hide the form
+        setShowForm(false);
+      } else {
+        console.error('Failed to update username');
+      }
+    } catch (error) {
+      console.error('Error while updating username:', error);
+    }
   };
 
   return (
@@ -45,9 +71,11 @@ export default function Home({ currUser }: HomeProps) {
             <input
               type="text"
               id="username"
-              name="username"
+              name="username" // should match key used in JSON.stringify()
               className="border border-gray-300 p-2 rounded w-full mb-4"
               required
+              value={newUsername} // bind value to state variable
+              onChange={handleUsernameChange} // update state variable on input change
             />
             <button type="submit" className="bg-green-500 text-dblue px-4 py-2 rounded font-bold">
               Submit
