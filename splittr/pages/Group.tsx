@@ -8,6 +8,9 @@ export default function Group({ bills, users, currUser }) {
   const [newBillAmount, setNewBillAmount] = useState(0);
   const [newBillUsers, setNewBillUsers] = useState([]);
   const [showForm, setShowForm] = useState(false);
+  const [editBill, setEditBill] = useState(null);
+  const [showEditForm, setShowEditForm] = useState(false);
+
 
   if (!currUser || bills.length === 0) {
     return <div className="text-dblue">Loading.. </div>;
@@ -156,7 +159,7 @@ export default function Group({ bills, users, currUser }) {
               </label>
               <ul>
                 {newBillUsers.map(user => (
-                  <li key={user.id} className= " text-dblue">{user}</li>
+                  <li key={user.id} className=" text-dblue">{user}</li>
                 ))}
               </ul>
             </div>
