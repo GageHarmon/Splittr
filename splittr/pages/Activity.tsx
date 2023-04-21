@@ -13,7 +13,7 @@ export default function BillItems({ bills, currUser }) {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-rblue to-rorange flex flex-col justify-start items-center pt-12">
-      <div className="bg-rorange p-4 mb-8 rounded-lg shadow-2xl">
+      <div className="bg-gradient-to-br from-rblue to-rorange p-4 mb-8 rounded-lg shadow-2xl">
         <h2 className="text-3xl font-bold text-dblue">Items for {currUser.username}</h2>
       </div>
       {filteredBills.map(bill => (
